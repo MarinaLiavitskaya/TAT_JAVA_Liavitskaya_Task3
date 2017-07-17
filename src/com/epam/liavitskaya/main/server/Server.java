@@ -1,7 +1,7 @@
 package com.epam.liavitskaya.main.server;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.Callable;
@@ -11,35 +11,39 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.apache.log4j.Logger;
+
 public class Server {
 
-	private static Queue<String> requestsServer = new ConcurrentLinkedQueue<String>();
+	final static Logger logger = Logger.getLogger(Server.class);
 
-	static int count = 0;
-	static List<String> futureResponseList = new ArrayList<>();
-	//static String futureResponse;	
+	private static Queue<String> requestsServer = new ConcurrentLinkedQueue<String>();
+	static List<String> responseList = new LinkedList<>();
 
 	public static List<String> startServer(String request) {
 
-		count++;
 		requestsServer.add(request);
-		ExecutorService executor = Executors.newFixedThreadPool(3);
-		List<Future<String>> list = new ArrayList<Future<String>>();
-		Callable<String> callable = new ExecutionProvider(requestsServer);
+		ExecutorService executor = Executors.newCachedThreadPool();
+		List<Future<String>> futureList = new LinkedList<Future<String>>();
+		Callable<String> callable = new RequestDistributor(requestsServer);
 
 		for (int i = 0; i < requestsServer.size(); i++) {
 			Future<String> future = executor.submit(callable);
-			list.add(future);
+			futureList.add(future);
 		}
-		for (Future<String> futureResponse : list) {
+		for (Future<String> futureResponse : futureList) {
 			try {
-				System.out.println(new Date() + " :: " + futureResponse.get());
+				String response = futureResponse.get();
+				System.out.println("   					 :: 				" + response);
+				responseList.add(response);
 			} catch (InterruptedException | ExecutionException e) {
-				e.printStackTrace();
+				logger.error("Error during executing multithreading", e);
 			}
 		}
-		executor.shutdown();
+		if (executor.isTerminated()) {
+			executor.shutdown();
+		}
 
-		return futureResponseList;
+		return responseList;
 	}
 }
