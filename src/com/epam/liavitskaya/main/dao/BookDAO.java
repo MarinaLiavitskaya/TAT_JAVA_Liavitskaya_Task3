@@ -20,7 +20,7 @@ public interface BookDAO {
 
 	void changeBookStatus(BookStatus bookStatus, int bookId) throws DAOException;
 
-	void appoint(int userId, int bookId) throws DAOException;
+	void appointBookTo(int userId, int bookId) throws DAOException;
 	
 	void removeAppoint(int bookId) throws DAOException;
 

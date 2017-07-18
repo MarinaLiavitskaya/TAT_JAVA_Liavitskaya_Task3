@@ -173,7 +173,7 @@ public class SQLBookDao implements BookDAO {
 	}
 
 	@Override
-	public void appoint(int userId, int bookId) throws DAOException {
+	public void appointBookTo(int userId, int bookId) throws DAOException {
 
 		PreparedStatement prStmt = null;
 

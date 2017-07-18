@@ -108,7 +108,7 @@ public class LibraryServiceImpl implements LibraryService {
 				throw new ServiceException("incorrect id");
 			}
 			bookDAO.changeBookStatus(BookStatus.ORDERED, bookId);
-			bookDAO.appoint(CurrentUser.getCurrentUser().getUserId(), bookId);
+			bookDAO.appointBookTo(CurrentUser.getCurrentUser().getUserId(), bookId);
 		} catch (DAOException e) {
 			throw new ServiceException();
 		}
