@@ -21,14 +21,8 @@ public class RequestDistributor implements Callable<String> {
 		String response = null;
 
 		while ((request = requests.poll()) != null) {
+
 			response = Controller.getInstance().executeTask(request);
-			// try {
-			// Thread.sleep(200);
-			// } catch (InterruptedException e) {
-			// e.printStackTrace();
-			// }
-			System.out.println("Current working thread : 	 " + Thread.currentThread().getName() + "   ***   "
-					+ Thread.currentThread().getId() + "  " + response);
 		}
 		return response;
 	}

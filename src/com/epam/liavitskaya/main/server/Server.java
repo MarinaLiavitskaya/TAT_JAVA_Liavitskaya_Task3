@@ -33,7 +33,6 @@ public class Server {
 		for (Future<String> futureResponse : futureList) {
 			try {
 				String response = futureResponse.get();
-				System.out.println("   					 :: 				" + response);
 				responseList.add(response);
 			} catch (InterruptedException | ExecutionException e) {
 				logger.error("Error during executing multithreading", e);
